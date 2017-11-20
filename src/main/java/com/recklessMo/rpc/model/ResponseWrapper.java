@@ -5,8 +5,17 @@ package com.recklessMo.rpc.model;
  */
 public class ResponseWrapper {
 
+    /**
+     * reqeustId
+     */
     private String requestId;
+    /**
+     * 状态
+     */
     private int status;
+    /**
+     * 如果成功,对应结果,否则对应exception或者errorMsg
+     */
     private Object result;
 
 

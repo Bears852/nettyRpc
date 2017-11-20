@@ -7,7 +7,7 @@ package com.recklessMo.rpc.bootstrap.client;
  *
  * Created by hpf on 11/17/17.
  */
-public class Client {
+public class RobotClient {
 
 
 

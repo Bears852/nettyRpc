@@ -1,4 +1,4 @@
-package com.recklessMo.rpc.codec;
+package com.recklessMo.rpc.codec.request;
 
 import com.recklessMo.rpc.model.RequestWrapper;
 import com.recklessMo.rpc.serializer.Serializer;

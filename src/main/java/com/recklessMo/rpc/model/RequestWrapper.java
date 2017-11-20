@@ -1,6 +1,5 @@
 package com.recklessMo.rpc.model;
 
-import java.lang.reflect.Parameter;
 import java.util.List;
 
 /**
@@ -8,11 +7,26 @@ import java.util.List;
  */
 public class RequestWrapper {
 
+    /**
+     * request的ID, 具体算法待定
+     */
     private String requestId;
+    /**
+     * 调用类名
+     */
     private String className;
+    /**
+     * 方法名
+     */
     private String methodName;
+    /**
+     * 参数类型
+     */
     private List<Class<?>> paramTypes;
-    private List<Parameter> parameters;
+    /**
+     * 参数值
+     */
+    private List<Object> parameters;
 
     public String getRequestId() {
         return requestId;
@@ -46,11 +60,11 @@ public class RequestWrapper {
         this.paramTypes = paramTypes;
     }
 
-    public List<Parameter> getParameters() {
+    public List<Object> getParameters() {
         return parameters;
     }
 
-    public void setParameters(List<Parameter> parameters) {
+    public void setParameters(List<Object> parameters) {
         this.parameters = parameters;
     }
 }
