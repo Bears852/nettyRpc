@@ -1,5 +1,7 @@
 package com.recklessMo.rpc.model;
 
+import io.netty.util.concurrent.Promise;
+
 import java.util.List;
 
 /**
@@ -27,6 +29,8 @@ public class RequestWrapper {
      * 参数值
      */
     private List<Object> parameters;
+
+    private Promise<ResponseWrapper> promise;
 
     public String getRequestId() {
         return requestId;

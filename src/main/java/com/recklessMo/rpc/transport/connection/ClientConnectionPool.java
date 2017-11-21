@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * TODO 并发控制分析
- * <p>
+ *
  * Created by hpf on 11/20/17.
  */
 public class ClientConnectionPool implements ChannelPool {
@@ -52,6 +52,9 @@ public class ClientConnectionPool implements ChannelPool {
         this.serverListConfig = serverListConfig;
     }
 
+    /**
+     * 初始化连接池
+     */
     public void init() {
         final Bootstrap bootstrap = new Bootstrap();
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup(1);
