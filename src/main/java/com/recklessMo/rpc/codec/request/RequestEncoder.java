@@ -1,7 +1,7 @@
 package com.recklessMo.rpc.codec.request;
 
 import com.recklessMo.rpc.model.RequestWrapper;
-import com.recklessMo.rpc.serializer.Serializer;
+import com.recklessMo.rpc.serializer.ISerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -9,7 +9,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 /**
  * Created by hpf on 11/18/17.
  */
-public class RequestEncoder<T extends Serializer> extends MessageToByteEncoder<RequestWrapper>{
+public class RequestEncoder<T extends ISerializer> extends MessageToByteEncoder<RequestWrapper>{
 
     //指定
     private T serializer;

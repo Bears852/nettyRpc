@@ -1,12 +1,14 @@
 package com.recklessMo.rpc.model;
 
+import java.io.Serializable;
+
 /**
  * Created by hpf on 11/17/17.
  */
-public class ResponseWrapper {
+public class ResponseWrapper implements Serializable{
 
     /**
-     * reqeustId
+     * requestId
      */
     private String requestId;
     /**

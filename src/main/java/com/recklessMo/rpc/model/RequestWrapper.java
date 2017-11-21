@@ -2,12 +2,15 @@ package com.recklessMo.rpc.model;
 
 import io.netty.util.concurrent.Promise;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
+ *
+ * 用于封装RPC客户端的请求
+ *
  * Created by hpf on 11/17/17.
  */
-public class RequestWrapper {
+public class RequestWrapper implements Serializable{
 
     /**
      * request的ID, 具体算法待定
@@ -24,13 +27,17 @@ public class RequestWrapper {
     /**
      * 参数类型
      */
-    private List<Class<?>> paramTypes;
+    private Class<?>[] paramTypes;
     /**
      * 参数值
      */
-    private List<Object> parameters;
-
+    private Object[] parameters;
+    /**
+     * 用于获取回复的promise
+     */
     private Promise<ResponseWrapper> promise;
+
+
 
     public String getRequestId() {
         return requestId;
@@ -56,19 +63,27 @@ public class RequestWrapper {
         this.methodName = methodName;
     }
 
-    public List<Class<?>> getParamTypes() {
+    public Class<?>[] getParamTypes() {
         return paramTypes;
     }
 
-    public void setParamTypes(List<Class<?>> paramTypes) {
+    public void setParamTypes(Class<?>[] paramTypes) {
         this.paramTypes = paramTypes;
     }
 
-    public List<Object> getParameters() {
+    public Object[] getParameters() {
         return parameters;
     }
 
-    public void setParameters(List<Object> parameters) {
+    public void setParameters(Object[] parameters) {
         this.parameters = parameters;
+    }
+
+    public Promise<ResponseWrapper> getPromise() {
+        return promise;
+    }
+
+    public void setPromise(Promise<ResponseWrapper> promise) {
+        this.promise = promise;
     }
 }
