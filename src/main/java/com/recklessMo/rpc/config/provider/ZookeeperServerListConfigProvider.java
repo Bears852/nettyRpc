@@ -5,7 +5,7 @@ import com.recklessMo.rpc.config.ServerListConfig;
 /**
  * Created by hpf on 11/20/17.
  */
-public class ZookeeperServerListConfigProvider implements ServerListConfigProvider {
+public class ZookeeperServerListConfigProvider implements IServerListConfigProvider {
 
     /**
      *

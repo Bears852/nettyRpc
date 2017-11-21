@@ -17,9 +17,9 @@ public class RequestWrapper implements Serializable{
      */
     private String requestId;
     /**
-     * 调用类名
+     * 调用服务名
      */
-    private String className;
+    private String serviceName;
     /**
      * 方法名
      */
@@ -47,12 +47,12 @@ public class RequestWrapper implements Serializable{
         this.requestId = requestId;
     }
 
-    public String getClassName() {
-        return className;
+    public String getServiceName() {
+        return serviceName;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
     public String getMethodName() {

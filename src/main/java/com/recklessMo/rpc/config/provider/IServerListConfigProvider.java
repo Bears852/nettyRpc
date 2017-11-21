@@ -5,6 +5,6 @@ import com.recklessMo.rpc.config.ServerListConfig;
 /**
  * Created by hpf on 11/20/17.
  */
-public interface ServerListConfigProvider {
+public interface IServerListConfigProvider {
     ServerListConfig getServerListConfig();
 }

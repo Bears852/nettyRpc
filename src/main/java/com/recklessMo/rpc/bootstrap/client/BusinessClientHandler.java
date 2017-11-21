@@ -1,4 +1,4 @@
-package com.recklessMo.rpc.transport.connection;
+package com.recklessMo.rpc.bootstrap.client;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -21,4 +21,5 @@ public class BusinessClientHandler implements ChannelHandler{
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
     }
+
 }

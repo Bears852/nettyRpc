@@ -3,6 +3,7 @@ package com.recklessMo.rpc.bootstrap.client;
 import com.recklessMo.rpc.bootstrap.protocol.IRobotProtocol;
 import com.recklessMo.rpc.transport.connection.ClientConnectionPool;
 import io.netty.util.concurrent.EventExecutor;
+
 import java.lang.reflect.Proxy;
 
 /**
@@ -13,7 +14,7 @@ import java.lang.reflect.Proxy;
  * <p>
  * Created by hpf on 11/17/17.
  */
-public class RobotClient {
+public class RpcClient {
 
 
     /**
@@ -42,13 +43,13 @@ public class RobotClient {
      * @return
      */
     public static <T> T createService(Class<T> interfaceClass, ClientConnectionPool pool, EventExecutor eventExecutor, boolean sync) {
-        return (T) Proxy.newProxyInstance(RobotClient.class.getClassLoader(),
+        return (T) Proxy.newProxyInstance(RpcClient.class.getClassLoader(),
                 new Class<?>[]{interfaceClass}, new ClientInvocationHandler(eventExecutor, pool, sync));
     }
 
 
     public static void main(String[] args) {
-        IRobotProtocol robotProtocol = RobotClient.createService(IRobotProtocol.class, createConnectionPool(), createEventExecutor(), true);
+        IRobotProtocol robotProtocol = RpcClient.createService(IRobotProtocol.class, createConnectionPool(), createEventExecutor(), true);
         robotProtocol.sendMsg("hello world!");
     }
 
