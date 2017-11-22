@@ -50,6 +50,7 @@ public class ClientConnectionPool implements ChannelPool {
      */
     public ClientConnectionPool(ServerListConfig serverListConfig) {
         this.serverListConfig = serverListConfig;
+        init();
     }
 
     /**
@@ -112,6 +113,7 @@ public class ClientConnectionPool implements ChannelPool {
         return choose().release(channel, promise);
     }
 
+    @SuppressWarnings("unchecked")
     public void close() {
         Iterator<Map.Entry<InetSocketAddress, FixedChannelPool>> it = ((AbstractChannelPoolMap) poolMap).iterator();
         while (it.hasNext()) {

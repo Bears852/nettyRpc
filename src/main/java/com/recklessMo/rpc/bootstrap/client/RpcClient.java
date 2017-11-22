@@ -1,7 +1,10 @@
 package com.recklessMo.rpc.bootstrap.client;
 
 import com.recklessMo.rpc.bootstrap.protocol.IRobotProtocol;
+import com.recklessMo.rpc.config.provider.FixedServerListConfigProvider;
+import com.recklessMo.rpc.config.provider.IServerListConfigProvider;
 import com.recklessMo.rpc.transport.connection.ClientConnectionPool;
+import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.EventExecutor;
 
 import java.lang.reflect.Proxy;
@@ -23,7 +26,9 @@ public class RpcClient {
      * @return
      */
     public static ClientConnectionPool createConnectionPool() {
-        return null;
+        //新建server list config;
+        IServerListConfigProvider provider = new FixedServerListConfigProvider();
+        return new ClientConnectionPool(provider.getServerListConfig());
     }
 
     /**
@@ -32,7 +37,7 @@ public class RpcClient {
      * @return
      */
     public static EventExecutor createEventExecutor() {
-        return null;
+        return new DefaultEventExecutor();
     }
 
     /**
@@ -42,15 +47,25 @@ public class RpcClient {
      * @param <T>
      * @return
      */
-    public static <T> T createService(Class<T> interfaceClass, ClientConnectionPool pool, EventExecutor eventExecutor, boolean sync) {
+    public static <T> T createService(String serviceName, Class<T> interfaceClass, ClientConnectionPool pool, EventExecutor eventExecutor, boolean sync) {
         return (T) Proxy.newProxyInstance(RpcClient.class.getClassLoader(),
-                new Class<?>[]{interfaceClass}, new ClientInvocationHandler(eventExecutor, pool, sync));
+                new Class<?>[]{interfaceClass}, new ClientInvocationHandler(serviceName, eventExecutor, pool, sync));
     }
 
 
     public static void main(String[] args) {
-        IRobotProtocol robotProtocol = RpcClient.createService(IRobotProtocol.class, createConnectionPool(), createEventExecutor(), true);
+        //创建客户端连接池
+        ClientConnectionPool clientConnectionPool = createConnectionPool();
+        //创建回调执行器
+        EventExecutor eventExecutor = createEventExecutor();
+        //创建同步客户端
+        IRobotProtocol robotProtocol = RpcClient.createService("RobotService", IRobotProtocol.class, clientConnectionPool, eventExecutor, true);
         robotProtocol.sendMsg("hello world!");
+
+
+        //TODO 创建异步客户端,添加回调!
+
+
     }
 
 }

@@ -1,5 +1,7 @@
 package com.recklessMo.rpc.bootstrap.server;
 
+import com.recklessMo.rpc.serializer.java.RequestWrapperCodec;
+import com.recklessMo.rpc.serializer.java.ResponseWrapperCodec;
 import com.recklessMo.rpc.transport.server.AbstractRpcService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -29,7 +31,7 @@ public class RpcServer {
         findService();
     }
 
-    public static Map<String, Object> getServerMap(){
+    public static Map<String, Object> getServerMap() {
         return serverMap;
     }
 
@@ -67,10 +69,13 @@ public class RpcServer {
                     .childHandler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
-                            ch.pipeline().addLast(new BusinessServerHandler());
+                            ch.pipeline().addLast(new RequestWrapperCodec())
+                                    .addLast(new ResponseWrapperCodec())
+                                    .addLast(new BusinessServerHandler());
                         }
                     });
             ChannelFuture channelFuture = bootstrap.bind(port).sync();
+            System.out.println("server listening at port: " + port);
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
             e.printStackTrace();

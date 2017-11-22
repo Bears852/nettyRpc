@@ -1,5 +1,6 @@
 package com.recklessMo.rpc.bootstrap.server;
 
+import com.alibaba.fastjson.JSON;
 import com.recklessMo.rpc.model.RequestWrapper;
 import com.recklessMo.rpc.util.ResponseUtils;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,6 +15,9 @@ import java.util.concurrent.Executors;
  */
 public class BusinessServerHandler extends SimpleChannelInboundHandler<RequestWrapper> {
 
+    /**
+     * 业务线程池,用cached
+     */
     private static ExecutorService workPool = Executors.newCachedThreadPool();
 
     @Override
@@ -39,44 +43,57 @@ public class BusinessServerHandler extends SimpleChannelInboundHandler<RequestWr
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestWrapper msg) throws Exception {
+        System.out.println("getRequest: " + JSON.toJSONString(msg));
         //做业务逻辑
         //先在业务线程里面做吧.
         final ChannelHandlerContext channelHandlerContext = ctx;
         final RequestWrapper requestMsg = msg;
         workPool.submit(() -> {
-            Object service = RpcServer.getServerMap().get(msg.getServiceName());
-            if (service == null) {
-                ResponseUtils.send404(channelHandlerContext, requestMsg.getRequestId());
-                return;
-            }
-            Method currentMethod = null;
-            //暂时顺序查找,后续变成提前放入map
-            Method[] methods = service.getClass().getMethods();
-            for (Method method : methods) {
-                if (method.getName().equals(msg.getMethodName())) {
-                    currentMethod = method;
-                    break;
-                }
-            }
-            //执行
-            if (currentMethod == null) {
-                //继续404;
-                ResponseUtils.send404(channelHandlerContext, requestMsg.getRequestId());
-                return;
-            }
-            Object result = null;
-            try {
-                result = currentMethod.invoke(service, msg.getParameters());
-            } catch (Exception e) {
-                e.printStackTrace();
-                //return 500;
-                ResponseUtils.send500(channelHandlerContext, requestMsg.getRequestId());
-            }
-            if (result != null) {
-                //回写逻辑
-                ResponseUtils.send200(channelHandlerContext, requestMsg.getRequestId(), result);
-            }
+            run(channelHandlerContext, requestMsg);
         });
+    }
+
+    /**
+     * 具体的处理逻辑
+     *
+     * TODO 目前没有批量处理request, 后续添加, 应该增加吞吐量!
+     *
+     * @param channelHandlerContext
+     * @param requestMsg
+     */
+    private void run(ChannelHandlerContext channelHandlerContext, RequestWrapper requestMsg) {
+        Object service = RpcServer.getServerMap().get(requestMsg.getServiceName());
+        if (service == null) {
+            ResponseUtils.send404(channelHandlerContext, requestMsg.getRequestId());
+            return;
+        }
+        Method currentMethod = null;
+        //暂时顺序查找,后续变成提前放入map
+        Method[] methods = service.getClass().getMethods();
+        for (Method method : methods) {
+            if (method.getName().equals(requestMsg.getMethodName())) {
+                currentMethod = method;
+                break;
+            }
+        }
+        //执行
+        if (currentMethod == null) {
+            //继续404;
+            ResponseUtils.send404(channelHandlerContext, requestMsg.getRequestId());
+            return;
+        }
+        Object result = null;
+        try {
+            result = currentMethod.invoke(service, requestMsg.getParameters());
+        } catch (Exception e) {
+            e.printStackTrace();
+            //return 500;
+            ResponseUtils.send500(channelHandlerContext, requestMsg.getRequestId());
+        }
+        if (result != null) {
+            //回写逻辑
+            ResponseUtils.send200(channelHandlerContext, requestMsg.getRequestId(), result);
+        }
     }
 
     @Override

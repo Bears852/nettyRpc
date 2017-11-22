@@ -1,5 +1,6 @@
 package com.recklessMo.rpc.model;
 
+import com.alibaba.fastjson.JSON;
 import io.netty.util.concurrent.Promise;
 
 import java.io.Serializable;
@@ -35,9 +36,7 @@ public class RequestWrapper implements Serializable{
     /**
      * 用于获取回复的promise
      */
-    private Promise<ResponseWrapper> promise;
-
-
+    private transient Promise<ResponseWrapper> promise;
 
     public String getRequestId() {
         return requestId;
@@ -85,5 +84,10 @@ public class RequestWrapper implements Serializable{
 
     public void setPromise(Promise<ResponseWrapper> promise) {
         this.promise = promise;
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

@@ -18,6 +18,11 @@ import java.lang.reflect.Method;
 public class ClientInvocationHandler implements InvocationHandler {
 
     /**
+     * 调用服务的名称
+     *
+     */
+    private String name;
+    /**
      * 用于执行异步调用回调.
      */
     private EventExecutor eventExecutor;
@@ -30,26 +35,28 @@ public class ClientInvocationHandler implements InvocationHandler {
      */
     private ClientConnectionPool connectionPool;
 
-    public ClientInvocationHandler(EventExecutor eventExecutor, ClientConnectionPool connectionPool, boolean sync) {
+    public ClientInvocationHandler(String name, EventExecutor eventExecutor, ClientConnectionPool connectionPool, boolean sync) {
         this.eventExecutor = eventExecutor;
         this.connectionPool = connectionPool;
         this.sync = sync;
+        this.name = name;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         RequestWrapper requestWrapper = new RequestWrapper();
-        requestWrapper.setClassName(proxy.getClass().getName());
+        requestWrapper.setServiceName(name);
         requestWrapper.setMethodName(method.getName());
         requestWrapper.setParameters(args);
         requestWrapper.setParamTypes(method.getParameterTypes());
         requestWrapper.setRequestId(UUIDUtils.getRandomId());
-        Promise<ResponseWrapper> promise = eventExecutor.newPromise();
+        System.out.println("request: " + requestWrapper);
         //获取一个可用的channel
         Future<Channel> channelFuture = connectionPool.acquire().sync();
         if(!channelFuture.isSuccess()){
             throw new Exception("获取链接失败!");
         }
+        Promise<ResponseWrapper> promise = eventExecutor.newPromise();
         requestWrapper.setPromise(promise);
         //注意channel.write和context.write的区别
         channelFuture.getNow().writeAndFlush(requestWrapper);
