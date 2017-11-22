@@ -1,7 +1,7 @@
 package com.recklessMo.rpc.bootstrap.server;
 
 import com.recklessMo.rpc.bootstrap.protocol.IRobotProtocol;
-import com.recklessMo.rpc.transport.server.AbstractRpcSerivce;
+import com.recklessMo.rpc.transport.server.AbstractRpcService;
 
 /**
  * TODO 如何让服务自动加载, 可以通过继承, 或者标签
@@ -11,7 +11,7 @@ import com.recklessMo.rpc.transport.server.AbstractRpcSerivce;
  * <p>
  * Created by hpf on 11/21/17.
  */
-public class RobotService extends AbstractRpcSerivce implements IRobotProtocol {
+public class RobotService extends AbstractRpcService implements IRobotProtocol {
 
     @Override
     public String sendMsg(String msg) {
