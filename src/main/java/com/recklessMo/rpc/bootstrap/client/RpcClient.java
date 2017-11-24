@@ -73,8 +73,8 @@ public class RpcClient {
         EventExecutor eventExecutor = createEventExecutor();
         //创建同步客户端
         IRobotProtocol robotProtocol = RpcClient.createService("RobotService", IRobotProtocol.class, clientConnectionPool, eventExecutor, true);
-        for(int i = 0; i < 10; i++) {
-            String msg = robotProtocol.sendMsg("hello world!");
+        for(int i = 0; i < 100; i++) {
+            String msg = robotProtocol.sendMsg("hello world! request: " + i);
             System.out.println("get response: " + msg);
         }
 
