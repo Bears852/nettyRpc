@@ -1,6 +1,6 @@
 package com.recklessMo.rpc.bootstrap.client;
 
-import com.alibaba.fastjson.JSON;
+import com.recklessMo.rpc.model.RequestWrapper;
 import com.recklessMo.rpc.model.ResponseWrapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -12,9 +12,17 @@ public class BusinessClientHandler extends SimpleChannelInboundHandler<ResponseW
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ResponseWrapper msg) throws Exception {
-
-        System.out.println("getResponse: " + JSON.toJSONString(msg));
-
+        //找到对应的client请求, 给请求设置promise为true,然后给请求设置值
+        RequestWrapper requestWrapper = RpcClient.getRequestWrapperMap().get(msg.getRequestId());
+        if(requestWrapper != null) {
+            if (msg.getStatus() == 200) {
+                requestWrapper.getPromise().setSuccess(msg);
+            }else{
+                //设置错误!
+            }
+            //设置完毕之后就可以移出map了
+            RpcClient.getRequestWrapperMap().remove(msg.getRequestId());
+        }
     }
 
 

@@ -43,7 +43,7 @@ public class BusinessServerHandler extends SimpleChannelInboundHandler<RequestWr
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestWrapper msg) throws Exception {
-        System.out.println("getRequest: " + JSON.toJSONString(msg));
+        System.out.println("get request: " + JSON.toJSONString(msg));
         //做业务逻辑
         //先在业务线程里面做吧.
         final ChannelHandlerContext channelHandlerContext = ctx;

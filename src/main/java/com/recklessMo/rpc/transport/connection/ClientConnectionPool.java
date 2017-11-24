@@ -42,7 +42,6 @@ public class ClientConnectionPool implements ChannelPool {
      */
     private AtomicInteger counter = new AtomicInteger(0);
 
-
     /**
      * 构造函数
      *

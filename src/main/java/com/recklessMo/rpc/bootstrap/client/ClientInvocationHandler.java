@@ -19,7 +19,6 @@ public class ClientInvocationHandler implements InvocationHandler {
 
     /**
      * 调用服务的名称
-     *
      */
     private String name;
     /**
@@ -44,29 +43,32 @@ public class ClientInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        RequestWrapper requestWrapper = new RequestWrapper();
-        requestWrapper.setServiceName(name);
-        requestWrapper.setMethodName(method.getName());
-        requestWrapper.setParameters(args);
-        requestWrapper.setParamTypes(method.getParameterTypes());
-        requestWrapper.setRequestId(UUIDUtils.getRandomId());
-        System.out.println("request: " + requestWrapper);
-        //获取一个可用的channel
-        Future<Channel> channelFuture = connectionPool.acquire().sync();
-        if(!channelFuture.isSuccess()){
-            throw new Exception("获取链接失败!");
-        }
-        Promise<ResponseWrapper> promise = eventExecutor.newPromise();
-        requestWrapper.setPromise(promise);
-        //注意channel.write和context.write的区别
-        channelFuture.getNow().writeAndFlush(requestWrapper);
-        //如果是同步模式,return结果
-        if(sync){
+        Future<Channel> channelFuture = null;
+        try {
+            RequestWrapper requestWrapper = new RequestWrapper();
+            requestWrapper.setServiceName(name);
+            requestWrapper.setMethodName(method.getName());
+            requestWrapper.setParameters(args);
+            requestWrapper.setParamTypes(method.getParameterTypes());
+            requestWrapper.setRequestId(UUIDUtils.getRandomId());
+            System.out.println("send request: " + requestWrapper);
+            //获取一个可用的channel
+            channelFuture = connectionPool.acquire().sync();
+            if (!channelFuture.isSuccess()) {
+                throw new Exception("获取链接失败!");
+            }
+            Promise<ResponseWrapper> promise = eventExecutor.newPromise();
+            requestWrapper.setPromise(promise);
+            //注意channel.write和context.write的区别
+            channelFuture.getNow().writeAndFlush(requestWrapper);
+            RpcClient.getRequestWrapperMap().put(requestWrapper.getRequestId(), requestWrapper);
+            //如果是同步模式,return结果
             promise.await();
-            return promise.getNow();
-        }else {
-            //如果是异步模式, return一个promise,可以给promise添加相应的listener,来实现异步操作
-            return promise;
+            return promise.getNow().getResult();
+        }finally {
+            if(channelFuture != null && channelFuture.isSuccess()) {
+                connectionPool.release(channelFuture.getNow());
+            }
         }
     }
 }

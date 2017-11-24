@@ -36,6 +36,7 @@ public class RequestWrapper implements Serializable{
     /**
      * 用于获取回复的promise
      */
+
     private transient Promise<ResponseWrapper> promise;
 
     public String getRequestId() {
