@@ -78,7 +78,8 @@ public class RpcClient {
             System.out.println("get response: " + msg);
         }
 
-
+        clientConnectionPool.close();
+        eventExecutor.shutdownGracefully();
         //TODO 创建异步客户端,添加回调!
 
     }

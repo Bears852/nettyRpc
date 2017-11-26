@@ -11,6 +11,7 @@ import io.netty.util.concurrent.Promise;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hpf on 11/20/17.
@@ -57,16 +58,15 @@ public class ClientInvocationHandler implements InvocationHandler {
             if (!channelFuture.isSuccess()) {
                 throw new Exception("获取链接失败!");
             }
+            RpcClient.getRequestWrapperMap().put(requestWrapper.getRequestId(), requestWrapper);
             Promise<ResponseWrapper> promise = eventExecutor.newPromise();
             requestWrapper.setPromise(promise);
             //注意channel.write和context.write的区别
             channelFuture.getNow().writeAndFlush(requestWrapper);
-            RpcClient.getRequestWrapperMap().put(requestWrapper.getRequestId(), requestWrapper);
             //如果是同步模式,return结果
-            promise.await();
-            return promise.getNow().getResult();
-        }finally {
-            if(channelFuture != null && channelFuture.isSuccess()) {
+            return promise.get(5000L, TimeUnit.MILLISECONDS).getResult();
+        } finally {
+            if (channelFuture != null && channelFuture.isSuccess()) {
                 connectionPool.release(channelFuture.getNow());
             }
         }
