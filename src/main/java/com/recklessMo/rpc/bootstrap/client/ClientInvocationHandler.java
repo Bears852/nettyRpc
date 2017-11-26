@@ -58,9 +58,9 @@ public class ClientInvocationHandler implements InvocationHandler {
             if (!channelFuture.isSuccess()) {
                 throw new Exception("获取链接失败!");
             }
-            RpcClient.getRequestWrapperMap().put(requestWrapper.getRequestId(), requestWrapper);
             Promise<ResponseWrapper> promise = eventExecutor.newPromise();
             requestWrapper.setPromise(promise);
+            RpcClient.getRequestWrapperMap().put(requestWrapper.getRequestId(), promise);
             //注意channel.write和context.write的区别
             channelFuture.getNow().writeAndFlush(requestWrapper);
             //如果是同步模式,return结果
