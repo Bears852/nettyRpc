@@ -22,13 +22,11 @@ public class BusinessServerHandler extends SimpleChannelInboundHandler<RequestWr
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channel registered !" + ctx.channel());
         ctx.fireChannelRegistered();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channel active ! " + ctx.channel());
         ctx.fireChannelActive();
     }
 
@@ -55,7 +53,7 @@ public class BusinessServerHandler extends SimpleChannelInboundHandler<RequestWr
 
     /**
      * 具体的处理逻辑
-     *
+     * <p>
      * TODO 目前没有批量处理request, 后续添加, 应该增加吞吐量!
      *
      * @param channelHandlerContext
