@@ -2,7 +2,6 @@ package com.recklessMo.rpc.util;
 
 import com.alibaba.fastjson.JSON;
 import com.recklessMo.rpc.model.ResponseWrapper;
-import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 
