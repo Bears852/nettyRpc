@@ -14,16 +14,16 @@ public class ServerListConfig {
      */
     private List<InetSocketAddress> addressList;
 
-    public ServerListConfig(){
+    public ServerListConfig() {
         addressList = new LinkedList<InetSocketAddress>();
     }
 
-    public synchronized void addServer(String server, int port){
+    public synchronized void addServer(String server, int port) {
         InetSocketAddress socketAddress = new InetSocketAddress(server, port);
         addServer(socketAddress);
     }
 
-    public synchronized void addServer(InetSocketAddress socketAddress){
+    public synchronized void addServer(InetSocketAddress socketAddress) {
         addressList.add(socketAddress);
     }
 

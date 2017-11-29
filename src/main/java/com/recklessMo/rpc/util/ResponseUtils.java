@@ -2,6 +2,7 @@ package com.recklessMo.rpc.util;
 
 import com.alibaba.fastjson.JSON;
 import com.recklessMo.rpc.model.ResponseWrapper;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
@@ -30,9 +31,11 @@ public class ResponseUtils {
      *
      * @param requestId
      */
-    public static void send404(ChannelHandlerContext ctx, String requestId) {
+    public static ChannelFuture send404(ChannelHandlerContext ctx, String requestId) {
         ResponseWrapper responseWrapper = createResponse(requestId, 404, "method not found !");
-        ctx.writeAndFlush(responseWrapper);
+        ChannelFuture channelFuture = ctx.writeAndFlush(responseWrapper);
+        channelFuture.addListener((future) -> System.out.println("send response: " + JSON.toJSONString(responseWrapper)));
+        return channelFuture;
     }
 
     /**
@@ -41,9 +44,11 @@ public class ResponseUtils {
      * @param ctx
      * @param requestId
      */
-    public static void send500(ChannelHandlerContext ctx, String requestId) {
+    public static ChannelFuture send500(ChannelHandlerContext ctx, String requestId) {
         ResponseWrapper responseWrapper = createResponse(requestId, 500, "internal error !");
-        ctx.writeAndFlush(responseWrapper);
+        ChannelFuture channelFuture = ctx.writeAndFlush(responseWrapper);
+        channelFuture.addListener((future) -> System.out.println("send response: " + JSON.toJSONString(responseWrapper)));
+        return channelFuture;
     }
 
     /**
@@ -53,10 +58,11 @@ public class ResponseUtils {
      * @param requestId
      * @param result
      */
-    public static void send200(ChannelHandlerContext ctx, String requestId, Object result) {
+    public static ChannelFuture send200(ChannelHandlerContext ctx, String requestId, Object result) {
         ResponseWrapper responseWrapper = createResponse(requestId, 200, result);
-        ctx.writeAndFlush(responseWrapper);
-        System.out.println("send response: " + JSON.toJSONString(result));
+        ChannelFuture channelFuture =  ctx.writeAndFlush(responseWrapper);
+        channelFuture.addListener((future) -> System.out.println("send response: " + JSON.toJSONString(responseWrapper)));
+        return channelFuture;
     }
 
 

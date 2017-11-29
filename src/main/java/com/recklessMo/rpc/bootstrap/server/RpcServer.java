@@ -24,7 +24,6 @@ import java.util.Set;
  */
 public class RpcServer {
 
-
     private static Map<String, Object> serverMap = new HashMap<>();
 
     static {
@@ -75,7 +74,7 @@ public class RpcServer {
                         }
                     });
             ChannelFuture channelFuture = bootstrap.bind(port).sync();
-            System.out.println("server listening at port: " + port);
+            channelFuture.addListener((future) -> System.out.println("server listening at: " + ((ChannelFuture) future).channel()));
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
             e.printStackTrace();
