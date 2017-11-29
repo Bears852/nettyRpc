@@ -36,6 +36,10 @@ public class ClientConnectionPool implements ChannelPool {
      */
     private ChannelPoolMap poolMap;
 
+    private  Bootstrap bootstrap;
+
+    private  EventLoopGroup eventLoopGroup;
+
     /**
      * for rr
      * 定义轮询策略,比如round-robin, 可以抽象出一个chooser
@@ -56,8 +60,8 @@ public class ClientConnectionPool implements ChannelPool {
      * 初始化连接池
      */
     public void init() {
-        final Bootstrap bootstrap = new Bootstrap();
-        EventLoopGroup eventLoopGroup = new NioEventLoopGroup(1);
+        bootstrap = new Bootstrap();
+        eventLoopGroup = new NioEventLoopGroup();
         bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true)
@@ -118,5 +122,6 @@ public class ClientConnectionPool implements ChannelPool {
         while (it.hasNext()) {
             it.next().getValue().close();
         }
+        eventLoopGroup.shutdownGracefully();
     }
 }

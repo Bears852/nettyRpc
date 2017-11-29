@@ -1,15 +1,20 @@
 package com.recklessMo.rpc.bootstrap.client;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.recklessMo.rpc.bootstrap.protocol.IRobotProtocol;
 import com.recklessMo.rpc.config.provider.FixedServerListConfigProvider;
 import com.recklessMo.rpc.config.provider.IServerListConfigProvider;
-import com.recklessMo.rpc.model.RequestWrapper;
+import com.recklessMo.rpc.model.ResponseWrapper;
 import com.recklessMo.rpc.transport.connection.ClientConnectionPool;
 import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.EventExecutor;
+import io.netty.util.concurrent.Promise;
 
 import java.lang.reflect.Proxy;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TODO 后续接入spring
@@ -25,15 +30,36 @@ public class RpcClient {
     /**
      * 请求map
      */
-    private static ConcurrentHashMap<String, RequestWrapper> requestWrapperMap = new ConcurrentHashMap<>();
+    private static Map<String, Promise<ResponseWrapper>> requestWrapperMap;
+    //
+    //public static ConcurrentHashMap<String, RequestWrapper> getRequestWrapperMap(){
+    //    return requestWrapperMap;
+    //}
+    static {
+        requestWrapperMap = CacheBuilder.newBuilder()
+                .maximumSize(10000)
+                .expireAfterWrite(15000, TimeUnit.MILLISECONDS)
+                .removalListener(new FutureRemoveListener())
+                .build()
+                .asMap();
+    }
 
-    public static ConcurrentHashMap<String, RequestWrapper> getRequestWrapperMap(){
+    public static Map<String, Promise<ResponseWrapper>> getRequestWrapperMap() {
         return requestWrapperMap;
+    }
+
+    private static class FutureRemoveListener implements RemovalListener<String, Promise<ResponseWrapper>> {
+
+        @Override
+        public void onRemoval(RemovalNotification<String, Promise<ResponseWrapper>> removalNotification) {
+
+        }
     }
 
 
 
-    /**
+
+        /**
      * 创建出clientConnectionPool
      *
      * @return
@@ -73,11 +99,13 @@ public class RpcClient {
         EventExecutor eventExecutor = createEventExecutor();
         //创建同步客户端
         IRobotProtocol robotProtocol = RpcClient.createService("RobotService", IRobotProtocol.class, clientConnectionPool, eventExecutor, true);
-        for(int i = 0; i < 1; i++) {
+        for(int i = 0; i < 10000; i++) {
             String msg = robotProtocol.sendMsg("hello world! request: " + i);
             System.out.println("get response: " + msg);
         }
 
+        clientConnectionPool.close();
+        eventExecutor.shutdownGracefully();
         //TODO 创建异步客户端,添加回调!
 
     }
