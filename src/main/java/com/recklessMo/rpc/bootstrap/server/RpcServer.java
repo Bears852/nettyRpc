@@ -39,7 +39,7 @@ public class RpcServer {
      */
     private static void findService() {
         try {
-            Reflections reflections = new Reflections("com.recklessMo");
+            Reflections reflections = new Reflections("com.recklessMo.rpc");
             Set<Class<?>> classSet = reflections.getTypesAnnotatedWith(RpcServiceFlag.class, true);
             for (Class<?> inner : classSet) {
                 RpcServiceFlag rpcServiceFlag = inner.getAnnotation(RpcServiceFlag.class);
