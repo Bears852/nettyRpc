@@ -1,8 +1,8 @@
 package com.recklessMo.rpc.bootstrap.server;
 
+import com.recklessMo.rpc.annotation.RpcServiceFlag;
 import com.recklessMo.rpc.serializer.java.RequestWrapperCodec;
 import com.recklessMo.rpc.serializer.java.ResponseWrapperCodec;
-import com.recklessMo.rpc.transport.server.AbstractRpcService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -40,11 +40,11 @@ public class RpcServer {
     private static void findService() {
         try {
             Reflections reflections = new Reflections("com.recklessMo");
-            Set<Class<? extends AbstractRpcService>> classSet = reflections.getSubTypesOf(AbstractRpcService.class);
-            for (Class<? extends AbstractRpcService> inner : classSet) {
-                AbstractRpcService service = inner.newInstance();
-                if (!serverMap.containsKey(service.getServiceName())) {
-                    serverMap.put(service.getServiceName(), service);
+            Set<Class<?>> classSet = reflections.getTypesAnnotatedWith(RpcServiceFlag.class, true);
+            for (Class<?> inner : classSet) {
+                RpcServiceFlag rpcServiceFlag = inner.getAnnotation(RpcServiceFlag.class);
+                if (!serverMap.containsKey(rpcServiceFlag.value())) {
+                    serverMap.put(rpcServiceFlag.value(), inner.newInstance());
                 }
             }
         } catch (Exception e) {
