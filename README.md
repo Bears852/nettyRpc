@@ -10,12 +10,8 @@ version 1.0.0:
 
 ##### version 1.0.0 主要问题:
 1. 如何实现一个稳定的客户端连接池! 打算看看okHttpClient的源码,从成熟的框架中吸取一下经验
-
-
-
+2. commons-object似乎也行
 
 version 2.0.0: TODO
-1. 泛化调用?
-2. 序列化方式扩展?
-3. server配置引入zookeeper?
-4. 接入spring?
+1. 实现分组件打包，分为客户端client，服务端server，公用组件common，注册registry，序列化serializer，底层传输transport。done
+2. 实现一个客户端连接池
