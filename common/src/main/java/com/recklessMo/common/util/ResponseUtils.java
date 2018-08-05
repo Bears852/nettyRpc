@@ -1,6 +1,7 @@
 package com.recklessMo.common.util;
 
 import com.alibaba.fastjson.JSON;
+import com.recklessMo.common.model.ResponseWrapper;
 import com.recklessMo.rpc.model.ResponseWrapper;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -9,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
  * Created by hpf on 11/21/17.
  */
 public class ResponseUtils {
+
 
     /**
      * 构建response

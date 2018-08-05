@@ -1,6 +1,6 @@
 package com.recklessMo.client.bootstrap;
 
-import com.recklessMo.rpc.model.ResponseWrapper;
+import com.recklessMo.common.model.ResponseWrapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.concurrent.Promise;

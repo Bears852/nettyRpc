@@ -1,6 +1,6 @@
 package com.recklessMo.transport.netty;
 
-import com.recklessMo.rpc.bootstrap.client.BusinessClientHandler;
+import com.recklessMo.client.bootstrap.BusinessClientHandler;
 import com.recklessMo.serializer.java.RequestWrapperCodec;
 import com.recklessMo.serializer.java.ResponseWrapperCodec;
 import io.netty.channel.Channel;

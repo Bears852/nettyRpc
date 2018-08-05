@@ -1,7 +1,7 @@
 package com.recklessMo.serializer.java;
 
-import com.recklessMo.rpc.model.RequestWrapper;
-import com.recklessMo.rpc.util.SerializeUtils;
+import com.recklessMo.common.model.RequestWrapper;
+import com.recklessMo.common.util.SerializeUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;

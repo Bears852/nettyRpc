@@ -1,9 +1,9 @@
 package com.recklessMo.client.bootstrap;
 
-import com.recklessMo.rpc.model.RequestWrapper;
-import com.recklessMo.rpc.model.ResponseWrapper;
-import com.recklessMo.rpc.transport.connection.ClientConnectionPool;
-import com.recklessMo.rpc.util.UUIDUtils;
+import com.recklessMo.common.model.RequestWrapper;
+import com.recklessMo.common.model.ResponseWrapper;
+import com.recklessMo.common.util.UUIDUtils;
+import com.recklessMo.transport.netty.ClientConnectionPool;
 import io.netty.channel.Channel;
 import io.netty.util.concurrent.EventExecutor;
 import io.netty.util.concurrent.Future;

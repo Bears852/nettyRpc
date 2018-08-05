@@ -1,6 +1,6 @@
 package com.recklessMo.registry.config.provider;
 
-import com.recklessMo.rpc.config.ServerListConfig;
+import com.recklessMo.registry.config.ServerListConfig;
 
 /**
  * Created by hpf on 11/20/17.

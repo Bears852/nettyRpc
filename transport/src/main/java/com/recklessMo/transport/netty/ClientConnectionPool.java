@@ -1,6 +1,6 @@
 package com.recklessMo.transport.netty;
 
-import com.recklessMo.rpc.config.ServerListConfig;
+import com.recklessMo.registry.config.ServerListConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -99,23 +99,6 @@ public class ClientConnectionPool implements ChannelPool {
         return null;
     }
 
-    public static void main(String[] args){
-        System.out.println(Integer.MAX_VALUE + 1);
-        Map<InetSocketAddress, Integer> temp = new ConcurrentHashMap<>();
-        temp.put(new InetSocketAddress(100), 12);
-        int index = 0;
-        Iterator<Map.Entry<InetSocketAddress, Integer>> it = temp.entrySet().iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            i++;
-            if (i == index) {
-                System.out.println(i);
-                System.out.println(it.next().getValue());
-                return;
-            }
-        }
-        return;
-    }
 
 
     public Future<Channel> acquire() {
@@ -142,4 +125,24 @@ public class ClientConnectionPool implements ChannelPool {
         }
         eventLoopGroup.shutdownGracefully();
     }
+
+
+    public static void main(String[] args){
+        System.out.println(Integer.MAX_VALUE + 1);
+        Map<InetSocketAddress, Integer> temp = new ConcurrentHashMap<>();
+        temp.put(new InetSocketAddress(100), 12);
+        int index = 0;
+        Iterator<Map.Entry<InetSocketAddress, Integer>> it = temp.entrySet().iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            i++;
+            if (i == index) {
+                System.out.println(i);
+                System.out.println(it.next().getValue());
+                return;
+            }
+        }
+        return;
+    }
+
 }

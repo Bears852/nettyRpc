@@ -1,6 +1,5 @@
 package com.recklessMo.common.util;
 
-import com.recklessMo.rpc.model.RequestWrapper;
 import io.netty.buffer.ByteBuf;
 
 import java.io.*;
@@ -56,12 +55,6 @@ public class SerializeUtils {
 
 
     public static void main(String[] args) throws Exception{
-
-        RequestWrapper data = new RequestWrapper();
-        data.setServiceName("xxx");
-        data.setRequestId("yyy");
-//        SerializeUtils.writeObject();
-        SerializeUtils.writeObject(null, data);
 
 
 

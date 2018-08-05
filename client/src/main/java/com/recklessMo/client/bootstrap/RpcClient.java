@@ -3,11 +3,10 @@ package com.recklessMo.client.bootstrap;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
-import com.recklessMo.rpc.bootstrap.protocol.IRobotProtocol;
-import com.recklessMo.rpc.config.provider.FixedServerListConfigProvider;
-import com.recklessMo.rpc.config.provider.IServerListConfigProvider;
-import com.recklessMo.rpc.model.ResponseWrapper;
-import com.recklessMo.rpc.transport.connection.ClientConnectionPool;
+import com.recklessMo.common.model.ResponseWrapper;
+import com.recklessMo.registry.config.provider.FixedServerListConfigProvider;
+import com.recklessMo.registry.config.provider.IServerListConfigProvider;
+import com.recklessMo.transport.netty.ClientConnectionPool;
 import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.EventExecutor;
 import io.netty.util.concurrent.Promise;
@@ -26,15 +25,11 @@ import java.util.concurrent.TimeUnit;
  */
 public class RpcClient {
 
-
     /**
      * 请求map
      */
     private static Map<String, Promise<ResponseWrapper>> requestWrapperMap;
-    //
-    //public static ConcurrentHashMap<String, RequestWrapper> getRequestWrapperMap(){
-    //    return requestWrapperMap;
-    //}
+
     static {
         requestWrapperMap = CacheBuilder.newBuilder()
                 .maximumSize(10000)
@@ -93,19 +88,7 @@ public class RpcClient {
 
 
     public static void main(String[] args) {
-        //创建客户端连接池
-        ClientConnectionPool clientConnectionPool = createConnectionPool();
-        //创建异步调用回调执行器
-        EventExecutor eventExecutor = createEventExecutor();
-        //创建同步客户端
-        IRobotProtocol robotProtocol = RpcClient.createService("RobotService", IRobotProtocol.class, clientConnectionPool, eventExecutor, true);
-        for(int i = 0; i < 1; i++) {
-            robotProtocol.sendMsg();
-        }
 
-        clientConnectionPool.close();
-        eventExecutor.shutdownGracefully();
-        //TODO 创建异步客户端,添加回调!
 
     }
 
