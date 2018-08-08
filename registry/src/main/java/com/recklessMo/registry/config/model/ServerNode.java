@@ -1,6 +1,5 @@
 package com.recklessMo.registry.config.model;
 
-import com.recklessMo.common.Node;
 import com.recklessMo.common.Weight;
 
 /**
@@ -24,6 +23,10 @@ public class ServerNode extends Node implements Weight {
      * 端口所在的端口
      */
     private int port;
+
+    public ServerNode(){
+
+    }
 
     @Override
     public int getWeight() {

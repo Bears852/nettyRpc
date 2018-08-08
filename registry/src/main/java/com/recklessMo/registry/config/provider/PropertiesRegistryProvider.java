@@ -5,7 +5,7 @@ import com.recklessMo.registry.config.ServerListConfig;
 /**
  * Created by hpf on 11/20/17.
  */
-public class PropertiesServerListConfigProvider implements IServerListConfigProvider {
+public class PropertiesRegistryProvider implements IRegistryProvider {
 
     private String propertiesFileName = "";
 
@@ -13,7 +13,7 @@ public class PropertiesServerListConfigProvider implements IServerListConfigProv
      * 从配置文件中获取服务器的地址
      * @return
      */
-    public ServerListConfig getServerListConfig() {
+    public ServerListConfig getServerList() {
         return null;
     }
 

@@ -4,8 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.recklessMo.common.model.ResponseWrapper;
-import com.recklessMo.registry.config.provider.FixedServerListConfigProvider;
-import com.recklessMo.registry.config.provider.IServerListConfigProvider;
+import com.recklessMo.registry.config.provider.FixedRegistryProvider;
+import com.recklessMo.registry.config.provider.IRegistryProvider;
 import com.recklessMo.transport.netty.ClientConnectionPool;
 import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.EventExecutor;
@@ -61,8 +61,8 @@ public class RpcClient {
      */
     public static ClientConnectionPool createConnectionPool() {
         //新建server list config;
-        IServerListConfigProvider provider = new FixedServerListConfigProvider();
-        return new ClientConnectionPool(provider.getServerListConfig());
+        IRegistryProvider provider = new FixedRegistryProvider();
+        return new ClientConnectionPool(provider.getServerList());
     }
 
     /**

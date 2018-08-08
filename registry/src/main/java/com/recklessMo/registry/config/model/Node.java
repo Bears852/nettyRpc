@@ -1,4 +1,4 @@
-package com.recklessMo.common;
+package com.recklessMo.registry.config.model;
 
 import java.util.Date;
 
@@ -19,6 +19,20 @@ public class Node {
      * 节点的类型，客户端节点还是服务端节点
      */
     private Enum registerType;
+    /**
+     * 节点注册的path
+     */
+    private String path;
+
+    public Node(){
+
+    }
+
+    public Node(String ip, Date registerTime, Enum registerType){
+        this.ip = ip;
+        this.registerTime = registerTime;
+        this.registerType = registerType;
+    }
 
     public Enum getRegisterType() {
         return registerType;
@@ -42,5 +56,13 @@ public class Node {
 
     public void setRegisterTime(Date registerTime) {
         this.registerTime = registerTime;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

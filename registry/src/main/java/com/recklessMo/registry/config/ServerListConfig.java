@@ -15,7 +15,7 @@ public class ServerListConfig {
     private List<InetSocketAddress> addressList;
 
     public ServerListConfig() {
-        addressList = new LinkedList<InetSocketAddress>();
+        addressList = new LinkedList<>();
     }
 
     public synchronized void addServer(String server, int port) {

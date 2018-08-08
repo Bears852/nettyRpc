@@ -5,7 +5,7 @@ import com.recklessMo.registry.config.ServerListConfig;
 /**
  * Created by hpf on 11/20/17.
  */
-public class ZookeeperServerListConfigProvider implements IServerListConfigProvider {
+public class ZookeeperRegistryProvider implements IRegistryProvider {
 
     /**
      *
@@ -13,7 +13,12 @@ public class ZookeeperServerListConfigProvider implements IServerListConfigProvi
      *
      * @return
      */
-    public ServerListConfig getServerListConfig() {
+    @Override
+    public ServerListConfig getServerList() {
         return null;
     }
+
+
+
+
 }
