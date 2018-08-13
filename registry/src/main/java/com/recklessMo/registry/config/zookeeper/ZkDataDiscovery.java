@@ -79,6 +79,7 @@ public class ZkDataDiscovery<T extends Node> implements DataDiscovery, Closeable
     public void close() {
         try {
             this.cache.close();
+            logger.info("exit zkDataDiscovery");
         }catch (Exception e){
             logger.error("close cache error", e);
         }

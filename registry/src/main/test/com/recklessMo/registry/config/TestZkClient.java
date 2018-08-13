@@ -34,7 +34,8 @@ public class TestZkClient {
 
     @Test
     public void testRecovery() throws Exception {
-        while (true) {
+        int cnt = 0;
+        while (cnt++ < 120) {
             List<ServerNode> serverNodeList = clientZkDataManager.getDataList();
             if(serverNodeList.size() > 0) {
                 for (int i = 0; i < serverNodeList.size(); i++) {

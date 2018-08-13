@@ -25,8 +25,8 @@ public class ClientZkDataManager extends AbstractZkDataManager implements DataDi
 
     @Override
     public void close(){
-        super.close();
         zkDataDiscovery.close();
+        super.close();
     }
 
 }

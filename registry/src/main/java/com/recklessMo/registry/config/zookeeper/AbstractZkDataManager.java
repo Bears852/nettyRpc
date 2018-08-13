@@ -82,7 +82,7 @@ public abstract class AbstractZkDataManager implements Closeable{
                 this.registerData();
             }
         });
-        logger.info("ZkDataManager init success");
+        logger.info("init zkDataManager success");
     }
 
 
@@ -104,7 +104,9 @@ public abstract class AbstractZkDataManager implements Closeable{
     public void close() {
         try {
             this.unRegisterData();
+            logger.info("exit unregister data");
             this.client.close();
+            logger.info("exit client");
         }catch (Exception e){
             logger.error("close error occur", e);
         }
