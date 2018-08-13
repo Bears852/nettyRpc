@@ -1,8 +1,10 @@
 package com.recklessMo.registry.config.zookeeper;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.google.common.base.Preconditions;
 import com.recklessMo.registry.config.DataRegistry;
+import com.recklessMo.registry.config.RegistryType;
 import com.recklessMo.registry.config.model.Node;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
@@ -25,15 +27,17 @@ public class ZkDataRegistry<T extends Node> implements DataRegistry<T> {
     public ZkDataRegistry(CuratorFramework client, String basePath) {
         this.client = Preconditions.checkNotNull(client, "client 不能为null");
         this.basePath = Preconditions.checkNotNull(basePath, "basePath 不能为null");
-
+        logger.info("init zkDataRegistry success");
     }
 
     @Override
     public void registerData(T t) throws Exception {
         //对其进行序列化
-        byte[] data = JSON.toJSONBytes(t);
+        SerializeConfig config = new SerializeConfig();
+        config.configEnumAsJavaBean(RegistryType.class);
+        byte[] data = JSON.toJSONString(t, config).getBytes();
         try {
-            String path = client.create().withProtection().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(basePath, data);
+            String path = client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(basePath, data);
             t.setPath(path);
         } catch (Exception e) {
             logger.error("register data failed", e);
@@ -44,7 +48,9 @@ public class ZkDataRegistry<T extends Node> implements DataRegistry<T> {
     @Override
     public void unRegisterData(String path) throws Exception {
         try {
-            client.delete().guaranteed().forPath(path);
+            if(path != null) {
+                client.delete().guaranteed().forPath(path);
+            }
         }catch(Exception e){
             logger.error("unRegister data failed", e);
             throw e;

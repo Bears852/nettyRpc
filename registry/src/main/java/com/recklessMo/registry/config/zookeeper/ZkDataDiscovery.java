@@ -2,6 +2,7 @@ package com.recklessMo.registry.config.zookeeper;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.base.Preconditions;
+import com.recklessMo.common.Closeable;
 import com.recklessMo.registry.config.DataDiscovery;
 import com.recklessMo.registry.config.model.Node;
 import org.apache.curator.framework.CuratorFramework;
@@ -24,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 必须extends Node对象
  *
  */
-public class ZkDataDiscovery<T extends Node> implements DataDiscovery {
+public class ZkDataDiscovery<T extends Node> implements DataDiscovery, Closeable {
 
     private static final Logger logger = LoggerFactory.getLogger(ZkDataDiscovery.class);
 
@@ -35,21 +36,24 @@ public class ZkDataDiscovery<T extends Node> implements DataDiscovery {
 
     public ZkDataDiscovery(CuratorFramework client, String path, Class<T> elementClass){
         Preconditions.checkNotNull(client, "client required not null");
+        Preconditions.checkNotNull(path, "path required not null");
         this.client = client;
         this.elementClass = elementClass;
         this.cache = new PathChildrenCache(client, path, true);
+        this.result.set(new LinkedList<>());
         try {
             this.cache.start();
-            this.cache.getListenable().addListener((curatorFramework, event)->{
+            this.cache.getListenable().addListener((c, event)->{
                 logger.info("{} for zkDiscovery {}",event.getType().name(), ZKPaths.getNodeFromPath(event.getData().getPath()));
                 updateNodeList();
             });
+            logger.info("init zkDiscovery success with path {}", path);
         }catch (Exception e){
             logger.error("init zkDiscovery failed", e);
-        }finally {
             CloseableUtils.closeQuietly(this.cache);
         }
     }
+
 
     @Override
     public List<T> getDataList() {
@@ -61,7 +65,9 @@ public class ZkDataDiscovery<T extends Node> implements DataDiscovery {
             List<T> nodeList = new LinkedList<>();
             for (ChildData childData : cache.getCurrentData()) {
                 //反序列化
-                nodeList.add(JSON.parseObject(childData.getData(), elementClass));
+                String str = new String(childData.getData());
+                logger.info(str);
+                nodeList.add(JSON.parseObject(str, elementClass));
             }
             result.getAndSet(nodeList);
             logger.info("update list success !");
@@ -69,6 +75,15 @@ public class ZkDataDiscovery<T extends Node> implements DataDiscovery {
             logger.error("update list error", e);
         }
     }
+
+    public void close() {
+        try {
+            this.cache.close();
+        }catch (Exception e){
+            logger.error("close cache error", e);
+        }
+    }
+
 
     public Class<T> getElementClass() {
         return elementClass;
@@ -101,4 +116,6 @@ public class ZkDataDiscovery<T extends Node> implements DataDiscovery {
     public void setResult(AtomicReference<List<T>> result) {
         this.result = result;
     }
+
+
 }

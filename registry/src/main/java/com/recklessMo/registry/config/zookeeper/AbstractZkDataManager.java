@@ -1,6 +1,7 @@
 package com.recklessMo.registry.config.zookeeper;
 
 import com.google.common.base.Preconditions;
+import com.recklessMo.common.Closeable;
 import com.recklessMo.registry.config.RegistryType;
 import com.recklessMo.registry.config.constant.Constants;
 import com.recklessMo.registry.config.model.Node;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * abstract抽象出几个公用的部分，包括初始化client，注册，监听，恢复机制等。
  */
-public abstract class AbstractZkDataManager {
+public abstract class AbstractZkDataManager implements Closeable{
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractZkDataManager.class);
 
@@ -70,33 +71,43 @@ public abstract class AbstractZkDataManager {
                     .sessionTimeoutMs(sessionTimeoutMs)
                     .build();
             client.start();
-        } else {
-            this.client = client;
         }
+        this.client = client;
+        this.zkDataRegistry = new ZkDataRegistry<>(this.client,
+                self.getRegisterType().equals(RegistryType.clientNode) ? Constants.CLIENT : Constants.SERVER);
+        this.registerData();
         //初始化恢复机制,连接监听
         client.getConnectionStateListenable().addListener((c, state) -> {
             if (state == ConnectionState.CONNECTED || state == ConnectionState.RECONNECTED) {
-                try {
-                    logger.info("register instance due to connection !");
-                    registerData();
-                    logger.info("register instance success after connection !");
-                } catch (Exception e) {
-                    logger.error("register instance failed after connection !", e);
-                }
+                this.registerData();
             }
         });
-        this.zkDataRegistry = new ZkDataRegistry<>(this.client,
-                self.getRegisterType().equals(RegistryType.clientNode) ? Constants.CLIENT : Constants.SERVER);
         logger.info("ZkDataManager init success");
     }
 
 
-    public void registerData() throws Exception {
-        zkDataRegistry.registerData(self);
+    public void registerData() {
+        try {
+            logger.info("register instance due to connection !");
+            zkDataRegistry.registerData(self);
+            logger.info("register instance success after connection !");
+        }catch(Exception e){
+            logger.error("register instance failed after connection !", e);
+        }
     }
 
     public void unRegisterData() throws Exception {
         zkDataRegistry.unRegisterData(self.getPath());
+    }
+
+    @Override
+    public void close() {
+        try {
+            this.unRegisterData();
+            this.client.close();
+        }catch (Exception e){
+            logger.error("close error occur", e);
+        }
     }
 
     public CuratorFramework getClient() {

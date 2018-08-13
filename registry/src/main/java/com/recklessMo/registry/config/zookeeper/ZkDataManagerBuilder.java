@@ -14,8 +14,12 @@ public class ZkDataManagerBuilder {
     private RegistryType type = null;
     private Node self = null;
     private String connectionString = null;
-    private int connectionTimeoutMs = Constants.SESSION_CONNECT_DEFAULT_MSG;
+    private int connectionTimeoutMs = Constants.SESSION_CONNECT_DEFAULT_MS;
     private int sessionTimeoutMs = Constants.SESSION_TIMEOUT_DEFAULT_MS;
+
+    private ZkDataManagerBuilder(){
+
+    }
 
     public static ZkDataManagerBuilder builder() {
         return new ZkDataManagerBuilder();
@@ -43,6 +47,8 @@ public class ZkDataManagerBuilder {
     }
 
     public ZkDataManagerBuilder node(Node self) {
+        Preconditions.checkNotNull(self, "节点信息不能为空！");
+        Preconditions.checkNotNull(self.getRegisterType(), "节点类型不能为null!");
         this.self = self;
         return this;
     }

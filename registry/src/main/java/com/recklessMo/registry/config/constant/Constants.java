@@ -16,17 +16,19 @@ public class Constants {
      * 客户端注册的目录
      * TODO 临时顺序节点？
      */
-    public static final String CLIENT = PREFIX + SEP + "client";
+    public static final String CLIENT = PREFIX + SEP + "client/client";
     /**
      * 服务端注册的目录
      * TODO 临时顺序节点？
      */
-    public static final String SERVER = PREFIX + SEP + "server";
+    public static final String SERVER = PREFIX + SEP + "server/server";
 
+
+    public static final String WATCH_SERVER = PREFIX + SEP + "server";
 
 
     public static final int SESSION_TIMEOUT_DEFAULT_MS = 30000;
-    public static final int SESSION_CONNECT_DEFAULT_MSG = 10000;
+    public static final int SESSION_CONNECT_DEFAULT_MS = 10000;
 }
 
 

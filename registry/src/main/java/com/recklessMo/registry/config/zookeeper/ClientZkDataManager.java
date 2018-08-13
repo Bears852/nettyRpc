@@ -14,13 +14,19 @@ public class ClientZkDataManager extends AbstractZkDataManager implements DataDi
 
     public ClientZkDataManager(CuratorFramework client, Node self, String connectionString, int connectionTimeoutMs, int sessionTimeoutMs){
         super(client, self, connectionString, connectionTimeoutMs, sessionTimeoutMs);
-        zkDataDiscovery = new ZkDataDiscovery<>(this.client, Constants.SERVER, ServerNode.class);
+        zkDataDiscovery = new ZkDataDiscovery<>(this.client, Constants.WATCH_SERVER, ServerNode.class);
     }
 
 
     @Override
     public List<ServerNode> getDataList() {
         return zkDataDiscovery.getDataList();
+    }
+
+    @Override
+    public void close(){
+        super.close();
+        zkDataDiscovery.close();
     }
 
 }
