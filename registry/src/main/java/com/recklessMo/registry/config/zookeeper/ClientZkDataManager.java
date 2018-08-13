@@ -1,24 +1,26 @@
 package com.recklessMo.registry.config.zookeeper;
 
+import com.recklessMo.registry.config.DataDiscovery;
+import com.recklessMo.registry.config.constant.Constants;
+import com.recklessMo.registry.config.model.Node;
 import com.recklessMo.registry.config.model.ServerNode;
+import org.apache.curator.framework.CuratorFramework;
 
-public class ClientZkDataManager extends AbstractZkDataManager {
+import java.util.List;
 
-    private ZkDiscovery<ServerNode> zkDiscovery = null;
+public class ClientZkDataManager extends AbstractZkDataManager implements DataDiscovery<ServerNode> {
 
-    public ClientZkDataManager(String connectionString) throws Exception{
-        super(connectionString);
+    private ZkDataDiscovery<ServerNode> zkDataDiscovery;
+
+    public ClientZkDataManager(CuratorFramework client, Node self, String connectionString, int connectionTimeoutMs, int sessionTimeoutMs){
+        super(client, self, connectionString, connectionTimeoutMs, sessionTimeoutMs);
+        zkDataDiscovery = new ZkDataDiscovery<>(this.client, Constants.SERVER, ServerNode.class);
     }
 
-    public ClientZkDataManager(String connectionString, int connectionTimeoutMs, int sessionTimeoutMs) throws Exception{
-        super(connectionString, connectionTimeoutMs, sessionTimeoutMs);
-    }
 
     @Override
-    void initInner() throws Exception{
-        zkDiscovery = new ZkDiscovery<ServerNode>(client, ServerNode.class);
+    public List<ServerNode> getDataList() {
+        return zkDataDiscovery.getDataList();
     }
-
-
 
 }

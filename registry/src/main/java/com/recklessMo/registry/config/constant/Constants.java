@@ -25,7 +25,7 @@ public class Constants {
 
 
 
-    public static final int SESSION_TIMEOUT_DEFAULT_MS = 10000;
+    public static final int SESSION_TIMEOUT_DEFAULT_MS = 30000;
     public static final int SESSION_CONNECT_DEFAULT_MSG = 10000;
 }
 

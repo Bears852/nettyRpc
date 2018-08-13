@@ -1,6 +1,5 @@
 package com.recklessMo.transport.netty;
 
-import com.recklessMo.registry.config.ServerListConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;

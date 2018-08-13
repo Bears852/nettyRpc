@@ -23,6 +23,7 @@
         <junit.version>3.8.1</junit.version>
         <netty.version>4.1.14.Final</netty.version>
         <curator.version>4.0.1</curator.version>
+        <json.version>1.2.47</json.version>
     </properties>
 
     <dependencyManagement>
@@ -88,6 +89,11 @@
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-x-async</artifactId>
                 <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${json.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
