@@ -28,7 +28,7 @@ public class TestZkServer {
         serverNode.setServiceName("cache");
         serverNode.setWeight(10);
         serverNode.setRegisterType(RegistryType.serverNode);
-        serverZkDataManager = (ServerZkDataManager) ZkDataManagerBuilder.builder().client(null).connectionString(connectionString).type(RegistryType.serverNode).node(serverNode).build();
+        serverZkDataManager = (ServerZkDataManager) ZkDataManagerBuilder.builder().connectionString(connectionString).type(RegistryType.serverNode).node(serverNode).build();
 
     }
 

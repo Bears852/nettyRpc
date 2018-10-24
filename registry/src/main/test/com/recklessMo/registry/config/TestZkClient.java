@@ -27,7 +27,7 @@ public class TestZkClient {
         clientNode.setIp("192.168.1.1");
         clientNode.setRegisterTime(new Date());
         clientNode.setRegisterType(RegistryType.clientNode);
-        clientZkDataManager = (ClientZkDataManager) ZkDataManagerBuilder.builder().client(null).connectionString(connectionString).type(RegistryType.clientNode).node(clientNode).build();
+        clientZkDataManager = (ClientZkDataManager) ZkDataManagerBuilder.builder().connectionString(connectionString).type(RegistryType.clientNode).node(clientNode).build();
 
     }
 
